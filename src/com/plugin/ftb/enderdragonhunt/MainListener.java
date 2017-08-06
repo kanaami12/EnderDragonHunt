@@ -30,6 +30,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
@@ -204,7 +205,7 @@ public class MainListener implements Listener {
 			playerName =  ChatColor.BOLD + event.getEntity().getKiller().getName() + ChatColor.RESET + "さんが";
 		}
 		if(event.getEntity() instanceof EnderDragon) {
-			broadcast("[" + ChatColor.DARK_PURPLE + "あめでとう！" + ChatColor.RESET + "]"  +  " " + playerName + ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
+			broadcast("[" + ChatColor.DARK_PURPLE + "おめでとう！" + ChatColor.RESET + "]"  +  " " + playerName + ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
 		}
 	}
 	
@@ -217,6 +218,11 @@ public class MainListener implements Listener {
 	private void sendPickupMessage(String prefix, String itemName, Player player) {
 		broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 				+ itemName + ChatColor.RESET + "を手に入れた");
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent event) {
+		broadcast(event.getPlayer().getLocation().getBlock().getBiome() + "");
 	}
 	
 	/*
