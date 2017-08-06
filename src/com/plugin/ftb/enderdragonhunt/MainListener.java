@@ -1,8 +1,12 @@
 package com.plugin.ftb.enderdragonhunt;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderDragon;
@@ -15,19 +19,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MainListener implements Listener {
 
+	private Main plugin = Main.plugin;
+	
 	private String prefix = Main.prefix;
+	//火打石を使ったプレイヤー
+	private ArrayList<Player> firedPlayer = new ArrayList<>();
 	
 	/*
 	 * アイテムを拾ったとき、プレイヤーネームとアイテムを表示
@@ -88,10 +103,11 @@ public class MainListener implements Listener {
 	}
 	
 	/*
-	 * エンダーパールが投げられたとき、通知する
+	 * エンダーパールが投げられたとき、ネザーポータルが作られたとき通知する
 	 */
 	@EventHandler
     public void onClick(PlayerInteractEvent event) {
+		//エンダーアイが投げられたとき
 		if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			ItemStack item = event.getItem();
 			if(item != null && item.getType().equals(Material.EYE_OF_ENDER)) {
@@ -104,6 +120,49 @@ public class MainListener implements Listener {
 						+ ChatColor.GREEN + "エンダーアイ" + ChatColor.RESET + "を投げた");
 			}
 		}
+		
+		//火打石をもって黒曜石を右クリックしたプレイヤーを記録(2tick後に削除)
+		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			ItemStack item = event.getItem();
+			if(item != null && item.getType().equals(Material.FLINT_AND_STEEL)) {
+				Material material = event.getClickedBlock().getType();
+				if(material != null && material.equals(Material.OBSIDIAN)) {
+					//火打石をもって黒曜石を右クリックしたとき
+					firedPlayer.add(event.getPlayer());
+					new BukkitRunnable() {
+			            @Override
+			            public void run() {
+			            	//2tick後に削除
+			                firedPlayer.remove(event.getPlayer());
+			            }
+			        }.runTaskLater(plugin, 2);
+					return;
+				}
+			}
+		}
+	}
+	
+	/*
+	 * 火打石をもって黒曜石を右クリックしたプレイヤーがポータルを作ったと推定
+	 */
+	@EventHandler
+    public void onPortalCreate(PortalCreateEvent event){
+		if(!firedPlayer.isEmpty()) {
+			for(Block block : event.getBlocks()) {
+				if(block.getType().equals(Material.OBSIDIAN)) {
+					broadcast(prefix + " " + ChatColor.BOLD + firedPlayer.get(firedPlayer.size()-1).getName() + ChatColor.RESET + "が"
+							+ ChatColor.DARK_RED + "ネザーポータル" + ChatColor.RESET + "を開いた");
+					broadcast(prefix + " 座標: " + block.getLocation().getBlockX() + ", "
+							+ block.getLocation().getBlockY() + ", "
+							+ block.getLocation().getBlockZ() );
+					return;
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onC(BlockPlaceEvent event) {
 	}
 	
 	/*
