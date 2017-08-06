@@ -1,6 +1,8 @@
 package com.plugin.ftb.enderdragonhunt;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,11 +24,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.md_5.bungee.api.ChatColor;
@@ -44,6 +47,8 @@ public class MainListener implements Listener {
 	//private String prefix = Main.prefix;
 	//火打石を使ったプレイヤー
 	private ArrayList<Player> firedPlayer = new ArrayList<>();
+	
+	private List<UUID> ban = new ArrayList<>();
 	
 	/*
 	 * アイテムを拾ったとき、プレイヤーネームとアイテムを表示
@@ -246,7 +251,35 @@ public class MainListener implements Listener {
 		if(event.getEntity() instanceof EnderDragon) {
 			broadcast("[" + ChatColor.DARK_PURPLE + "おめでとう！" + ChatColor.RESET + "]"  +  " " + playerName + ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
 		}
+		else if(Main.isHard) {
+			String name = "";
+			if(event.getEntity().getKiller() != null) {
+				name = event.getEntity().getKiller().getName();
+				if(event.getEntity() instanceof Player) {
+					Player player = (Player)event.getEntity();
+					Bukkit.broadcastMessage(player.getName() + " さんは " + event.getEntity().getKiller().getName() + " さんの攻撃により殉職なさいました。");
+					ban.add(player.getUniqueId());
+					player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+				}
+			}
+			else {
+				if(event.getEntity() instanceof Player) {
+					Player player = (Player)event.getEntity();
+					Bukkit.broadcastMessage(player.getName() + " さんが殉職なさいました。");
+					ban.add(player.getUniqueId());
+					player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+				}
+			}
+		}
 	}
+	
+	@EventHandler
+	public void banKick(PlayerLoginEvent event) {
+		if(ban.contains(event.getPlayer().getUniqueId())) {
+			event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
+		}
+	}
+	
 	
 	
 	/*

@@ -1,5 +1,9 @@
 name: EnderDragonHunt
 main: com.plugin.ftb.enderdragonhunt.Main
 version: 1.0
+commands:
+  enderdragon:
+    usage:  /<command>
+    default: true
 depend:
   - ProtocolLib
