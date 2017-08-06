@@ -40,7 +40,7 @@ public class MainListener implements Listener {
 
 	private Main plugin = Main.plugin;
 	
-	private String prefix = Main.prefix;
+	//private String prefix = Main.prefix;
 	//火打石を使ったプレイヤー
 	private ArrayList<Player> firedPlayer = new ArrayList<>();
 	
@@ -56,15 +56,15 @@ public class MainListener implements Listener {
 		
 		if(material.equals(Material.BLAZE_ROD)) {
 			itemName = ChatColor.YELLOW + "ブレイズロッド";
-			sendPickupMessage(itemName, player);
+			sendPickupMessage("[" + ChatColor.YELLOW + "ブレイズ" + ChatColor.RESET + "]", itemName, player);
 		}
 		if(material.equals(Material.ENDER_PEARL)) {
 			itemName = ChatColor.GREEN + "エンダーパール";
-			sendPickupMessage(itemName, player);
+			sendPickupMessage("[" + ChatColor.GREEN + "エンパ" + ChatColor.RESET + "]", itemName, player);
 		}
 		if(material.equals(Material.EYE_OF_ENDER)) {
 			itemName = ChatColor.GREEN + "エンダーアイ";
-			sendPickupMessage(itemName, player);
+			sendPickupMessage("[" + ChatColor.GREEN + "アイ" + ChatColor.RESET + "]", itemName, player);
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class MainListener implements Listener {
 		
 		if(material.equals(Material.EYE_OF_ENDER)) {
 			itemName = ChatColor.GREEN + "エンダーアイ";
-			broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "が"
+			broadcast("[" + ChatColor.GREEN + "アイ" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 					+ itemName + ChatColor.RESET + "を作成した");
 		}
 	}
@@ -92,9 +92,9 @@ public class MainListener implements Listener {
 	public void onPortal(BlockMultiPlaceEvent event) {
 		for(BlockState blockState : event.getReplacedBlockStates()) {
 			if(blockState.getBlock().getType().equals(Material.ENDER_PORTAL)) {
-				broadcast(prefix + " " + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + "が"
+				broadcast("[" + ChatColor.DARK_GREEN + "ポータル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + "さんが"
 						+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET + "を開いた");
-				broadcast(prefix + " 座標: " + event.getBlock().getLocation().getBlockX() + ", "
+				broadcast("[" + ChatColor.DARK_GREEN + "ポータル" + ChatColor.RESET + "]" + " 座標: " + event.getBlock().getLocation().getBlockX() + ", "
 						+ event.getBlock().getLocation().getBlockY() + ", "
 						+ event.getBlock().getLocation().getBlockZ() );
 				return;
@@ -111,12 +111,14 @@ public class MainListener implements Listener {
 		if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			ItemStack item = event.getItem();
 			if(item != null && item.getType().equals(Material.EYE_OF_ENDER)) {
-				Material material = event.getClickedBlock().getType();
-				if(material != null && material.equals(Material.ENDER_PORTAL_FRAME)) {
-					//エンダーポータルフレームに置いているのであれば無視
-					return;
+				if(event.getClickedBlock() != null) {
+					Material material = event.getClickedBlock().getType();
+					if(material != null && material.equals(Material.ENDER_PORTAL_FRAME)) {
+						//エンダーポータルフレームに置いているのであれば無視
+						return;
+					}
 				}
-				broadcast(prefix + " " + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + "が"
+				broadcast("[" + ChatColor.GREEN + "アイ" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + "さんが"
 						+ ChatColor.GREEN + "エンダーアイ" + ChatColor.RESET + "を投げた");
 			}
 		}
@@ -150,9 +152,9 @@ public class MainListener implements Listener {
 		if(!firedPlayer.isEmpty()) {
 			for(Block block : event.getBlocks()) {
 				if(block.getType().equals(Material.OBSIDIAN)) {
-					broadcast(prefix + " " + ChatColor.BOLD + firedPlayer.get(firedPlayer.size()-1).getName() + ChatColor.RESET + "が"
+					broadcast("[" + ChatColor.DARK_RED + "ネザー" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + firedPlayer.get(firedPlayer.size()-1).getName() + ChatColor.RESET + "さんが"
 							+ ChatColor.DARK_RED + "ネザーポータル" + ChatColor.RESET + "を開いた");
-					broadcast(prefix + " 座標: " + block.getLocation().getBlockX() + ", "
+					broadcast("[" + ChatColor.DARK_RED + "ネザー" + ChatColor.RESET + "]"  + " 座標: " + block.getLocation().getBlockX() + ", "
 							+ block.getLocation().getBlockY() + ", "
 							+ block.getLocation().getBlockZ() );
 					return;
@@ -178,14 +180,14 @@ public class MainListener implements Listener {
 				if(arrow.getShooter() instanceof Player) {
 					//矢によって爆発した場合
 					Player player = (Player)arrow.getShooter();
-					broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "が"
+					broadcast("[" + ChatColor.LIGHT_PURPLE + "クリスタル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 							+ ChatColor.LIGHT_PURPLE + "エンダークリスタル" + ChatColor.RESET + "を射貫いて破壊した");
 					return;
 				}
 			}
 			if(damager instanceof Player) {
 				Player player = (Player)damager;
-				broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "が"
+				broadcast("[" + ChatColor.LIGHT_PURPLE + "クリスタル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 						+ ChatColor.LIGHT_PURPLE + "エンダークリスタル" + ChatColor.RESET + "を破壊した");
 				return;
 			}
@@ -199,10 +201,10 @@ public class MainListener implements Listener {
 	public void onDeath(EntityDeathEvent event) {
 		String playerName = "";
 		if(event.getEntity().getKiller() != null) {
-			playerName =  ChatColor.BOLD + event.getEntity().getKiller().getName() + ChatColor.RESET + "が";
+			playerName =  ChatColor.BOLD + event.getEntity().getKiller().getName() + ChatColor.RESET + "さんが";
 		}
 		if(event.getEntity() instanceof EnderDragon) {
-			broadcast(prefix +  " " + playerName + ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
+			broadcast("[" + ChatColor.DARK_PURPLE + "あめでとう！" + ChatColor.RESET + "]"  +  " " + playerName + ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
 		}
 	}
 	
@@ -212,8 +214,8 @@ public class MainListener implements Listener {
 	 * @param itemName 拾ったアイテムの名前
 	 * @param player 拾ったプレイヤー
 	 */
-	private void sendPickupMessage(String itemName, Player player) {
-		broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "が"
+	private void sendPickupMessage(String prefix, String itemName, Player player) {
+		broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 				+ itemName + ChatColor.RESET + "を手に入れた");
 	}
 	
