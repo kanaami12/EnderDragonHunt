@@ -38,6 +38,9 @@ public class MainListener implements Listener {
 	//ネザー要塞
 	private boolean cnetheryousai = false;
 	
+	//エンドポータル
+	private boolean cendpotal = false;
+	
 	//private String prefix = Main.prefix;
 	//火打石を使ったプレイヤー
 	private ArrayList<Player> firedPlayer = new ArrayList<>();
@@ -123,6 +126,17 @@ public class MainListener implements Listener {
 							int z1 = p.getLocation().getBlockZ();
 							broadcast("[" + ChatColor.DARK_RED + "ネザー" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
 									+ ChatColor.DARK_RED + "ネザー要塞" + ChatColor.RESET + "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
+						}
+					}
+					else if (mat == Material.ENDER_PORTAL_FRAME) {
+						if(!cnetheryousai) {
+							cendpotal = true;
+							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+							int x1 = p.getLocation().getBlockX();
+							int y1 = p.getLocation().getBlockY();
+							int z1 = p.getLocation().getBlockZ();
+							broadcast("[" + ChatColor.DARK_GREEN + "ポータル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
+									+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET + "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
 						}
 					}
 
