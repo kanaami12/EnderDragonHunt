@@ -1,13 +1,9 @@
 package com.plugin.ftb.enderdragonhunt;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Arrow;
@@ -19,14 +15,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -48,12 +44,9 @@ public class MainListener implements Listener {
 	//火打石を使ったプレイヤー
 	private ArrayList<Player> firedPlayer = new ArrayList<>();
 	
-	private List<UUID> ban = new ArrayList<>();
-	
 	/*
 	 * アイテムを拾ったとき、プレイヤーネームとアイテムを表示
 	 */
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPickup(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
@@ -208,32 +201,52 @@ public class MainListener implements Listener {
 				name = event.getEntity().getKiller().getName();
 				if(event.getEntity() instanceof Player) {
 					Player player = (Player)event.getEntity();
-					Bukkit.broadcastMessage(player.getName() + " さんは " + event.getEntity().getKiller().getName() + " さんの攻撃により殉職なさいました。");
-					ban.add(player.getUniqueId());
-					player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+					if(!Main.admin.contains(player.getUniqueId())) {
+						Bukkit.broadcastMessage(player.getName() + " さんは " + event.getEntity().getKiller().getName() + " さんの攻撃により殉職なさいました。");
+						Main.ban.add(player.getUniqueId());
+						player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+					}
 				}
 			}
 			else {
 				if(event.getEntity() instanceof Player) {
 					Player player = (Player)event.getEntity();
-					Bukkit.broadcastMessage(player.getName() + " さんが殉職なさいました。");
-					ban.add(player.getUniqueId());
-					player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+					if(!Main.admin.contains(player.getUniqueId())) {
+						Bukkit.broadcastMessage(player.getName() + " さんが殉職なさいました。");
+						Main.ban.add(player.getUniqueId());
+						player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+					}
 				}
 			}
 		}
 	}
 	
 	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if(Main.isHard) {
+			Main.dcounter += 1;
+			ScoreBoard.setScore();
+		}
+	}
+	
+	@EventHandler
 	public void banKick(PlayerLoginEvent event) {
-		if(ban.contains(event.getPlayer().getUniqueId())) {
+		if(Main.ban.contains(event.getPlayer().getUniqueId())) {
 			if (!event.getPlayer().isOp()) {//Op以外は鯖に入れない
 				event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
 			}
 		}
 	}
 	
-	
+	@EventHandler
+	public void onDamage(EntityDamageEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player)event.getEntity();
+			if(Main.immortal.contains(player.getUniqueId())) {
+				event.setDamage(0);
+			}
+		}
+	}
 	
 	/*
 	 * 拾ったアイテムを通知

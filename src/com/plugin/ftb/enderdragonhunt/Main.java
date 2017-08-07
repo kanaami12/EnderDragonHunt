@@ -1,6 +1,20 @@
 package com.plugin.ftb.enderdragonhunt;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -10,6 +24,14 @@ public class Main extends JavaPlugin{
 	public static Main plugin;
 	
 	public static boolean isHard = false;
+	
+	public static int dcounter = 0;
+	
+	public static List<UUID> ban = new ArrayList<>();
+	
+	public static List<UUID> admin = new ArrayList<>();
+	
+	public static List<UUID> immortal = new ArrayList<>();
 	
 	@Override
 	public void onEnable() {
@@ -22,6 +44,9 @@ public class Main extends JavaPlugin{
 
 		//タブ補完登録
 		getCommand("enderdragon").setTabCompleter(new MainTabCompleter());
+		
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		Scoreboard board = manager.getMainScoreboard();
 		
 		//クラス作成がめんどくさかったので直接入れちゃいました
 		//もしクラス分けするときは消してください！by える
