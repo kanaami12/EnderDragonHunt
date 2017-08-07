@@ -106,7 +106,6 @@ public class MainListener implements Listener {
 	}
 	
 	//ネザー要塞+エンド要塞
-	
 	@EventHandler
 	public void onSturactureMove(PlayerMoveEvent e) {
 		if (e.isCancelled()) {
@@ -208,10 +207,6 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler
-	public void onC(BlockPlaceEvent event) {
-	}
-	
 	/*
 	 * エンダークリスタルが爆発したとき通知する
 	 */
@@ -290,11 +285,6 @@ public class MainListener implements Listener {
 	private void sendPickupMessage(String prefix, String itemName, Player player) {
 		broadcast(prefix + " " + ChatColor.BOLD + player.getName() + ChatColor.RESET + "さんが"
 				+ itemName + ChatColor.RESET + "を手に入れた");
-	}
-	
-	@EventHandler
-	public void onMove(PlayerMoveEvent event) {
-		broadcast(event.getPlayer().getLocation().getBlock().getBiome() + "");
 	}
 	
 	/*
