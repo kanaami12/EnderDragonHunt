@@ -39,10 +39,10 @@ public class MainListener implements Listener {
 	private Main plugin = Main.plugin;
 	
 	//ネザー要塞
-	private boolean cnetheryousai = false;
+	public static boolean cnetheryousai = false;
 	
 	//エンドポータル
-	private boolean cendpotal = false;
+	public static boolean cendpotal = false;
 	
 	//private String prefix = Main.prefix;
 	//火打石を使ったプレイヤー
@@ -101,50 +101,6 @@ public class MainListener implements Listener {
 				broadcast("[" + ChatColor.DARK_GREEN + "ポータル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + "さんが"
 							+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET + "を開いた(座標: " + event.getBlock().getLocation().getBlockX() + ", "  + event.getBlock().getLocation().getBlockY() + ", " + event.getBlock().getLocation().getBlockZ() + ")");
 				return;
-			}
-		}
-	}
-	
-	//ネザー要塞+エンド要塞
-	@EventHandler
-	public void onSturactureMove(PlayerMoveEvent e) {
-		if (e.isCancelled()) {
-			return;
-		}
-		Player p = e.getPlayer();
-		Location loc = p.getLocation();
-		
-		for (int x = 0; x <= 6; x++) {
-			for (int y = 0; y <= 6; y++) {
-				for (int z = 0; z <= 6; z++) {
-					Location newloc = new Location(p.getWorld(), loc.getX() + (x - 3),
-							loc.getY() + (y - 3), loc.getZ() + (z - 3));
-					Block b = newloc.getBlock();
-					Material mat = b.getType();
-					if (mat == Material.NETHER_BRICK) {
-						if(!cnetheryousai) {
-							cnetheryousai = true;
-							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-							int x1 = p.getLocation().getBlockX();
-							int y1 = p.getLocation().getBlockY();
-							int z1 = p.getLocation().getBlockZ();
-							broadcast("[" + ChatColor.DARK_RED + "ネザー" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
-									+ ChatColor.DARK_RED + "ネザー要塞" + ChatColor.RESET + "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
-						}
-					}
-					else if (mat == Material.ENDER_PORTAL_FRAME) {
-						if(!cnetheryousai) {
-							cendpotal = true;
-							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-							int x1 = p.getLocation().getBlockX();
-							int y1 = p.getLocation().getBlockY();
-							int z1 = p.getLocation().getBlockZ();
-							broadcast("[" + ChatColor.DARK_GREEN + "ポータル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
-									+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET + "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
-						}
-					}
-
-				}
 			}
 		}
 	}
