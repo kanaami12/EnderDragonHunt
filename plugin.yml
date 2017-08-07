@@ -4,6 +4,10 @@ version: 1.0
 commands:
   enderdragon:
     usage:  /<command>
-    default: true
+    permission: enderdragonhunt.command
+    
+permissions:
+  enderdragonhunt.command:
+    default: op
 depend:
   - ProtocolLib
