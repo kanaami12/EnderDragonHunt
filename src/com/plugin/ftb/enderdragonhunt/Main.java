@@ -57,18 +57,22 @@ public class Main extends JavaPlugin{
 			public void run() {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					Biome biome = p.getWorld().getBiome(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
-					if (biome == Biome.HELL && MainListener.cnetheryousai == false) {
+					if (biome == Biome.HELL) {
+						if(MainListener.netherFinders.contains(p.getUniqueId())){
+							//既に発見している場合無視
+							break;
+						}
 						Location loc = p.getLocation();
-						for (int x = 0; x <= 6; x += 2) {
-							for (int y = 0; y <= 6; y += 2) {
-								for (int z = 0; z <= 6; z += 2) {
+						for (int x = 0; x <= 6; x += 1) {
+							for (int y = 0; y <= 6; y += 1) {
+								for (int z = 0; z <= 6; z += 1) {
 									Location newloc = new Location(p.getWorld(), loc.getX() + (x - 3),
 											loc.getY() + (y - 3), loc.getZ() + (z - 3));
 									Block b = newloc.getBlock();
 									Material mat = b.getType();
 									if (mat == Material.NETHER_BRICK) {
-										if (!MainListener.cnetheryousai) {
-											MainListener.cnetheryousai = true;
+										if (!MainListener.netherFinders.contains(p.getUniqueId())) {
+											MainListener.netherFinders.add(p.getUniqueId());
 											p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 											int x1 = p.getLocation().getBlockX();
 											int y1 = p.getLocation().getBlockY();
@@ -83,18 +87,22 @@ public class Main extends JavaPlugin{
 								}
 							}
 						}
-					} else if (biome != Biome.HELL && MainListener.cendpotal == false) {
+					}else{
+						if(MainListener.endFinders.contains(p.getUniqueId())){
+							//既に発見している場合無視
+							break;
+						}
 						Location loc = p.getLocation();
-						for (int x = 0; x <= 6; x += 2) {
-							for (int y = 0; y <= 6; y += 2) {
-								for (int z = 0; z <= 6; z += 2) {
+						for (int x = 0; x <= 6; x += 1) {
+							for (int y = 0; y <= 6; y += 1) {
+								for (int z = 0; z <= 6; z += 1) {
 									Location newloc = new Location(p.getWorld(), loc.getX() + (x - 3),
 											loc.getY() + (y - 3), loc.getZ() + (z - 3));
 									Block b = newloc.getBlock();
 									Material mat = b.getType();
 									if (mat == Material.ENDER_PORTAL_FRAME) {
-										if (!MainListener.cendpotal) {
-											MainListener.cendpotal = true;
+										if (!MainListener.endFinders.contains(p.getUniqueId())) {
+											MainListener.endFinders.add(p.getUniqueId());
 											p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 											int x1 = p.getLocation().getBlockX();
 											int y1 = p.getLocation().getBlockY();

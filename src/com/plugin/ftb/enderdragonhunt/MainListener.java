@@ -1,6 +1,7 @@
 package com.plugin.ftb.enderdragonhunt;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,10 +36,10 @@ public class MainListener implements Listener {
 	private Main plugin = Main.plugin;
 	
 	//ネザー要塞
-	public static boolean cnetheryousai = false;
-	
+	public static ArrayList<UUID> netherFinders = new ArrayList<>();
+		
 	//エンドポータル
-	public static boolean cendpotal = false;
+	public static ArrayList<UUID>  endFinders =  new ArrayList<>();
 	
 	//private String prefix = Main.prefix;
 	//火打石を使ったプレイヤー
