@@ -41,6 +41,7 @@ public class Main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(new MainListener(), this);
 		
 		getCommand("enderdragon").setExecutor(new MainCommandExecutor(this));
+		getCommand("ftb28").setExecutor(new FutabaCommand(this));
 
 		//タブ補完登録
 		getCommand("enderdragon").setTabCompleter(new MainTabCompleter());

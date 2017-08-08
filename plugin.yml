@@ -5,6 +5,9 @@ commands:
   enderdragon:
     usage:  /<command>
     permission: enderdragonhunt.command
+  ftb28:
+    usage:  /<command>
+    default: true
     
 permissions:
   enderdragonhunt.command:
