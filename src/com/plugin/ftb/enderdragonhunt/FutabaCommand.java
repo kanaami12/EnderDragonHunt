@@ -33,7 +33,17 @@ public class FutabaCommand implements CommandExecutor {
 						int amount = itemStack.getAmount();
 						Material item = itemStack.getType();
 						ftb28.getInventory().addItem(new ItemStack(item, amount));
-						ftb28.sendMessage("[アイテム受取] " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " さんが " + ChatColor.BLUE + itemStack.getItemMeta().getLocalizedName() + ChatColor.RESET + " を " + ChatColor.GOLD + itemStack.getAmount() + ChatColor.RESET + "個 渡しました。");
+						String name;
+						if(item == Material.BLAZE_ROD) {
+							name = "ブレイズロッド";
+						}
+						else if(item == Material.ENDER_PEARL) {
+							name ="エンダーパール";
+						}
+						else {
+							name = "null";
+						}
+						ftb28.sendMessage("[アイテム受取] " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " さんから " + ChatColor.BLUE + name + ChatColor.RESET + " を " + ChatColor.GOLD + itemStack.getAmount() + ChatColor.RESET + "個 受け取りました。");
 						itemStack.setAmount(0);
 					}
 				}
