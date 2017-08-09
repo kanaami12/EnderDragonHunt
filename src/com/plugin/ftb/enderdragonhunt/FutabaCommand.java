@@ -24,6 +24,7 @@ public class FutabaCommand implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player player = (Player)sender;
 			if(Bukkit.getPlayerExact("ftb28") == null) {
+				player.sendMessage(ChatColor.RED + "ftb28はいません");
 				return true;
 			}
 			Player ftb28 = Bukkit.getPlayerExact("ftb28");
@@ -44,6 +45,7 @@ public class FutabaCommand implements CommandExecutor {
 							name = "null";
 						}
 						ftb28.sendMessage("[アイテム受取] " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " さんから " + ChatColor.BLUE + name + ChatColor.RESET + " を " + ChatColor.GOLD + itemStack.getAmount() + ChatColor.RESET + "個 受け取りました。");
+						player.sendMessage("[アイテム送信] " + ChatColor.GREEN + "ftb28" + ChatColor.RESET + " さんに " + ChatColor.BLUE + name + ChatColor.RESET + " を " + ChatColor.GOLD + itemStack.getAmount() + ChatColor.RESET + "個 送りました。");
 						itemStack.setAmount(0);
 					}
 				}
