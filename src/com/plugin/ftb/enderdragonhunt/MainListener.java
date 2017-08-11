@@ -261,12 +261,6 @@ public class MainListener implements Listener {
 				event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
 			}
 		}
-		if(Main.isHard) {
-			ScoreBoard.setScoreHard();
-		}
-		else {
-			ScoreBoard.setScoreNormal();
-		}
 	}
 
 	@EventHandler
