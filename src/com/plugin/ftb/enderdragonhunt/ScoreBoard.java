@@ -82,17 +82,17 @@ public class ScoreBoard{
 		ender = 0;
 		nether = 0;
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			if(player.getLocation().getBlockY() <= 61) {
-				lower += 1;
-			}
-			else {
-				higher +=1;
-			}
 			if(player.getLocation().getBlock().getBiome() == Biome.HELL) {
 				nether +=1;
 			}
 			else if(player.getLocation().getBlock().getBiome() == Biome.SKY) {
 				ender +=1;
+			}
+			else if(player.getLocation().getBlockY() <= 61) {
+				lower += 1;
+			}
+			else {
+				higher +=1;
 			}
 		}
 	}
