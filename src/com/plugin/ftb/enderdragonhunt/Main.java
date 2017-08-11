@@ -1,7 +1,9 @@
 package com.plugin.ftb.enderdragonhunt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -33,6 +35,10 @@ public class Main extends JavaPlugin{
 	
 	public static List<UUID> immortal = new ArrayList<>();
 	
+	public static Map<Player, Location> desart = new HashMap<>();
+	public static Map<Player, Location> endpotal = new HashMap<>();
+	public static Map<Player, Location> netheryousai = new HashMap<>();
+	
 	@Override
 	public void onEnable() {
 		plugin = this;
@@ -42,6 +48,10 @@ public class Main extends JavaPlugin{
 		
 		getCommand("enderdragon").setExecutor(new MainCommandExecutor(this));
 		getCommand("ftb28").setExecutor(new FutabaCommand(this));
+		
+		getCommand("desert").setExecutor(new DesertCommandExecutor(this));
+		getCommand("nether").setExecutor(new NetherCommandExecutor(this));
+		getCommand("end").setExecutor(new EndCommandExecutor(this));
 
 		//タブ補完登録
 		getCommand("enderdragon").setTabCompleter(new MainTabCompleter());
@@ -57,6 +67,19 @@ public class Main extends JavaPlugin{
 			public void run() {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					Biome biome = p.getWorld().getBiome(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
+					if(biome == Biome.DESERT) {
+						if(!Main.desart.containsKey(p)) {
+							p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+							int x1 = p.getLocation().getBlockX();
+							int y1 = p.getLocation().getBlockY();
+							int z1 = p.getLocation().getBlockZ();
+							Bukkit.broadcastMessage("[" + ChatColor.GOLD + "砂漠" + ChatColor.RESET
+									+ "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
+									+ ChatColor.GOLD + "砂漠" + ChatColor.RESET + "を見つけた(座標: " + x1
+									+ ", " + y1 + ", " + z1 + ")");
+							Main.desart.put(p, new Location(p.getWorld(), x1, y1, z1));
+						}
+					}
 					if (biome == Biome.HELL) {
 						if(MainListener.netherFinders.contains(p.getUniqueId())){
 							//既に発見している場合無視
@@ -81,6 +104,7 @@ public class Main extends JavaPlugin{
 													+ "]" + " " + ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
 													+ ChatColor.DARK_RED + "ネザー要塞" + ChatColor.RESET + "を見つけた(座標: " + x1
 													+ ", " + y1 + ", " + z1 + ")");
+											Main.netheryousai.put(p, new Location(p.getWorld(), x1, y1, z1));
 										}
 
 									}
@@ -112,6 +136,7 @@ public class Main extends JavaPlugin{
 															+ ChatColor.BOLD + p.getName() + ChatColor.RESET + "さんが"
 															+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET
 															+ "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
+											Main.endpotal.put(p, new Location(p.getWorld(), x1, y1, z1));
 										}
 									}
 								}
