@@ -1,3 +1,4 @@
+
 package com.plugin.ftb.enderdragonhunt;
 
 import org.bukkit.Bukkit;
@@ -37,19 +38,19 @@ public class ScoreBoard{
 		//スコアボードの中身
 		String str = (Main.dcounter - 1) + "";
 		
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数" + ChatColor.RESET + ":      " + str);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人" + ChatColor.RESET + ":      " + higher);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人" + ChatColor.RESET + ":      " + lower);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザー人" + ChatColor.RESET + ":      " + ender);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンド人" + ChatColor.RESET + ":      " + nether);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + str);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
 		
 		changeERs();
 		
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数" + ChatColor.RESET + ":      " + Main.dcounter).setScore(0);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人" + ChatColor.RESET + ":      " + higher).setScore(-1);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人" + ChatColor.RESET + ":      " + lower).setScore(-2);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザー人" + ChatColor.RESET + ":      " + ender).setScore(-3);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンド人" + ChatColor.RESET + ":      " + nether).setScore(-4);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(4);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(3);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(2);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(1);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(0);
 		
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
@@ -83,16 +84,16 @@ public class ScoreBoard{
 		nether = 0;
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			if(player.getLocation().getBlock().getBiome() == Biome.HELL) {
-				nether +=1;
+				nether = nether + 1;
 			}
 			else if(player.getLocation().getBlock().getBiome() == Biome.SKY) {
-				ender +=1;
+				ender = ender + 1;
 			}
 			else if(player.getLocation().getBlockY() <= 61) {
-				lower += 1;
+				lower = lower + 1;
 			}
 			else {
-				higher +=1;
+				higher = higher + 1;
 			}
 		}
 	}
@@ -109,17 +110,17 @@ public class ScoreBoard{
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 		
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人" + ChatColor.RESET + ":      " + higher);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人" + ChatColor.RESET + ":      " + lower);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザー人" + ChatColor.RESET + ":      " + ender);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンド人" + ChatColor.RESET + ":      " + nether);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
 		
 		changeERs();
 		
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人" + ChatColor.RESET + ":      " + higher).setScore(-1);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人" + ChatColor.RESET + ":      " + lower).setScore(-2);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザー人" + ChatColor.RESET + ":      " + ender).setScore(-3);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンド人" + ChatColor.RESET + ":      " + nether).setScore(-4);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(3);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(2);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(1);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(0);
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			player.setScoreboard(board);
