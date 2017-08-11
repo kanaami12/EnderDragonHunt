@@ -8,6 +8,18 @@ commands:
   ftb28:
     usage:  /<command>
     default: true
+  desert:
+    usage:  /<command>
+    default: true
+  end:
+    usage:  /<command>
+    default: true
+  nether:
+    usage:  /<command>
+    default: true
+  portal:
+    usage:  /<command>
+    default: true
     
 permissions:
   enderdragonhunt.command:

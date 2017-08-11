@@ -250,7 +250,7 @@ public class MainListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if (Main.isHard) {
 			Main.dcounter += 1;
-			ScoreBoard.setScore();
+			ScoreBoard.setScoreHard();
 		}
 	}
 
@@ -258,10 +258,14 @@ public class MainListener implements Listener {
 	public void banKick(PlayerLoginEvent event) {
 		if (Main.ban.contains(event.getPlayer().getUniqueId())) {
 			if (!event.getPlayer().isOp()) {// Op以外は鯖に入れない
-				if (!Main.admin.contains(event.getPlayer().getUniqueId())) {
-					event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
-				}
+				event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
 			}
+		}
+		if(Main.isHard) {
+			ScoreBoard.setScoreHard();
+		}
+		else {
+			ScoreBoard.setScoreNormal();
 		}
 	}
 

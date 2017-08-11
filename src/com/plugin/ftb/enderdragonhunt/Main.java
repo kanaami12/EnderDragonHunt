@@ -14,6 +14,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -60,6 +61,19 @@ public class Main extends JavaPlugin{
 		
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		Scoreboard board = manager.getMainScoreboard();
+		
+		new BukkitRunnable() {
+            @Override
+            public void run() {
+            	if(isHard){
+            		ScoreBoard.setScoreHard();
+            	}
+            	else {
+            		ScoreBoard.setScoreNormal();
+            	}
+            	
+            }
+        }.runTaskTimer(this, 20, 20);
 		
 		//クラス作成がめんどくさかったので直接入れちゃいました
 		//もしクラス分けするときは消してください！by える

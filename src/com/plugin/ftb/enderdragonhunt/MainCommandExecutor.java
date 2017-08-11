@@ -27,12 +27,13 @@ public class MainCommandExecutor implements CommandExecutor {
 		case "setHardmode":
 			if("true".equals(args[1])) {
 				Main.isHard = true;
-				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは有効です");
+				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは有効です。");
 			}
 			else {
 				Main.isHard = false;
-				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です");
+				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です。");
 			}
+			return true;
 		
 		default:
 			break;
