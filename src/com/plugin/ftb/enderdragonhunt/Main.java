@@ -38,6 +38,7 @@ public class Main extends JavaPlugin{
 	public static Map<Player, Location> desart = new HashMap<>();
 	public static Map<Player, Location> endpotal = new HashMap<>();
 	public static Map<Player, Location> netheryousai = new HashMap<>();
+	public static Map<Player, Location> netherportal = new HashMap<>();
 	
 	@Override
 	public void onEnable() {
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin{
 		
 		getCommand("desert").setExecutor(new DesertCommandExecutor(this));
 		getCommand("nether").setExecutor(new NetherCommandExecutor(this));
+		getCommand("portal").setExecutor(new PortalCommandExecutor(this));
 		getCommand("end").setExecutor(new EndCommandExecutor(this));
 
 		//タブ補完登録
