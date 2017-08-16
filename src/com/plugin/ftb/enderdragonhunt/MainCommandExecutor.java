@@ -20,15 +20,17 @@ public class MainCommandExecutor implements CommandExecutor {
 		
 		switch(args[0]){
 		case "setHardmode":
-			if("true".equals(args[1])) {
-				Main.isHard = true;
-				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは有効です。");
+			if(args.length == 2) {
+				if("true".equals(args[1])) {
+					Main.isHard = true;
+					Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは有効です。");
+				}
+				else {
+					Main.isHard = false;
+					Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です。");
+				}
+				return true;
 			}
-			else {
-				Main.isHard = false;
-				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です。");
-			}
-			return true;
 			
 		case "reload":
 			//スコアボードをリロード
