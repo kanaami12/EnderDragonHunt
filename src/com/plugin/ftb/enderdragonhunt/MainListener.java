@@ -25,8 +25,6 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -229,8 +227,9 @@ public class MainListener implements Listener {
 					if (!Main.admin.contains(player.getUniqueId())) {
 						Bukkit.broadcastMessage(player.getName() + " さんは " + event.getEntity().getKiller().getName()
 								+ " さんの攻撃により殉職なさいました。");
-						Main.ban.add(player.getUniqueId());
-						player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+						//運営のBAN防止の為Alertsに一時的に移植
+						//Main.ban.add(player.getUniqueId());
+						//player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
 					}
 				}
 			} else {
@@ -238,8 +237,9 @@ public class MainListener implements Listener {
 					Player player = (Player) event.getEntity();
 					if (!Main.admin.contains(player.getUniqueId())) {
 						Bukkit.broadcastMessage(player.getName() + " さんが殉職なさいました。");
-						Main.ban.add(player.getUniqueId());
-						player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
+						//運営のBAN防止の為Alertsに一時的に移植
+						//Main.ban.add(player.getUniqueId());
+						//player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
 					}
 				}
 			}
@@ -253,15 +253,15 @@ public class MainListener implements Listener {
 			ScoreBoard.setScoreHard();
 		}
 	}
-
-	@EventHandler
+	//運営のBAN防止の為Alertsに一時的に移植
+	/*@EventHandler
 	public void banKick(PlayerLoginEvent event) {
 		if (Main.ban.contains(event.getPlayer().getUniqueId())) {
 			if (!event.getPlayer().isOp()) {// Op以外は鯖に入れない
 				event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
 			}
 		}
-	}
+	}*/
 
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
