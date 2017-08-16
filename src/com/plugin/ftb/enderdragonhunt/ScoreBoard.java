@@ -126,4 +126,17 @@ public class ScoreBoard{
 			player.setScoreboard(board);
 		}
 	}
+	
+	/*
+	 * スコアボードをリロードする
+	 */
+	public static void reloadScoreboard() {
+		if(Main.isHard) {
+			Objective o = board.getObjective("hardmode");
+			if(o != null) o.unregister();
+		}else {
+			Objective o = board.getObjective("normalmode");
+			if(o != null) o.unregister();
+		}
+	}
 }

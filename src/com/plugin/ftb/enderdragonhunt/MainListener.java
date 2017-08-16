@@ -105,7 +105,6 @@ public class MainListener implements Listener {
 	/*
 	 * 狼対策
 	 */
-
 	@EventHandler
 	public void onTame(EntityTameEvent e) {
 		if(e.getEntity() instanceof Wolf) {

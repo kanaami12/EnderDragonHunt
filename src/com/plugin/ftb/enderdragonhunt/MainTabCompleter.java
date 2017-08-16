@@ -16,6 +16,7 @@ public class MainTabCompleter implements TabCompleter {
 		if (sender instanceof Player && args.length == 1) {
 			if(label.equalsIgnoreCase("enderdragon")){
 				tab.add("setHardmode");
+				tab.add("reload");
 			}
 			return tab;//タブ補完
 		}

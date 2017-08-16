@@ -18,11 +18,6 @@ public class MainCommandExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if(!(args.length == 2)) {
-			sender.sendMessage(ChatColor.GREEN + "/enderdragon setHardmode [true,false]");
-			return true;
-		}
-		
 		switch(args[0]){
 		case "setHardmode":
 			if("true".equals(args[1])) {
@@ -34,10 +29,18 @@ public class MainCommandExecutor implements CommandExecutor {
 				Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です。");
 			}
 			return true;
-		
-		default:
-			break;
 			
+		case "reload":
+			//スコアボードをリロード
+			if(args.length == 1) {
+				ScoreBoard.reloadScoreboard();
+				return true;
+			}
+			
+		default:
+			sender.sendMessage(ChatColor.GREEN + "/enderdragon setHardmode [true,false]\n"
+					+ "/enderdragon reload");
+			break;
 		}
 		return true;
 	}
