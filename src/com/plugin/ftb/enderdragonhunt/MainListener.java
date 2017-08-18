@@ -1,5 +1,6 @@
 package com.plugin.ftb.enderdragonhunt;
 
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -45,6 +47,15 @@ public class MainListener implements Listener {
 	// private String prefix = Main.prefix;
 	// 火打石を使ったプレイヤー
 	private ArrayList<Player> firedPlayer = new ArrayList<>();
+	
+	//ネザーポータルを既に開けているか
+	public static boolean netherOpened = false;
+	//エンドポータルを既に開けているか
+	public static boolean endOpened = false;
+	//ネーザー要塞を既に見つけているか
+	public static boolean netherFound = false;
+	//エンド要塞を既に見つけているか
+	public static boolean endFound = false;
 
 	/*
 	 * アイテムを拾ったとき、プレイヤーネームとアイテムを表示
@@ -97,6 +108,13 @@ public class MainListener implements Listener {
 						+ ChatColor.RESET + "を開いた(座標: " + event.getBlock().getLocation().getBlockX() + ", "
 						+ event.getBlock().getLocation().getBlockY() + ", " + event.getBlock().getLocation().getBlockZ()
 						+ ")");
+				
+				if(!endOpened) {
+					//初めて開かれたのであればポイント追加
+					MainUtils.addPoint(event.getPlayer(), 10);
+					//開かれたことを記録
+					endOpened = true;
+				}
 				return;
 			}
 		}
@@ -170,6 +188,12 @@ public class MainListener implements Listener {
 							+ block.getLocation().getBlockX() + ", " + block.getLocation().getBlockY() + ", "
 							+ block.getLocation().getBlockZ() + ")");
 					Main.netherportal.put(firedPlayer.get(firedPlayer.size() - 1), new Location(event.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()));
+					if(!netherOpened) {
+						//初めて開かれたのであればポイント追加
+						MainUtils.addPoint(firedPlayer.get(firedPlayer.size() - 1), 10);
+						//開かれたことを記録
+						netherOpened = true;
+					}
 					return;
 				}
 			}
@@ -192,6 +216,9 @@ public class MainListener implements Listener {
 					broadcast("[" + ChatColor.LIGHT_PURPLE + "クリスタル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD
 							+ player.getName() + ChatColor.RESET + "さんが" + ChatColor.LIGHT_PURPLE + "エンダークリスタル"
 							+ ChatColor.RESET + "を射貫いて破壊した");
+					
+					//ポイント追加
+					MainUtils.addPoint(player, 10);
 					return;
 				}
 			}
@@ -200,6 +227,9 @@ public class MainListener implements Listener {
 				broadcast("[" + ChatColor.LIGHT_PURPLE + "クリスタル" + ChatColor.RESET + "]" + " " + ChatColor.BOLD
 						+ player.getName() + ChatColor.RESET + "さんが" + ChatColor.LIGHT_PURPLE + "エンダークリスタル"
 						+ ChatColor.RESET + "を破壊した");
+				
+				//ポイント追加
+				MainUtils.addPoint(player, 10);
 				return;
 			}
 		}
@@ -217,6 +247,10 @@ public class MainListener implements Listener {
 		if (event.getEntity() instanceof EnderDragon) {
 			broadcast("[" + ChatColor.DARK_PURPLE + "おめでとう！" + ChatColor.RESET + "]" + " " + playerName
 					+ ChatColor.DARK_PURPLE + "エンダードラゴン" + ChatColor.RESET + "を倒した");
+			
+			//ポイント追加
+			MainUtils.addPoint(event.getEntity().getKiller(), 100);
+			
 		} else if (Main.isHard) {
 			String name = "";
 			if (event.getEntity().getKiller() != null) {
@@ -226,9 +260,6 @@ public class MainListener implements Listener {
 					if (!Main.admin.contains(player.getUniqueId())) {
 						Bukkit.broadcastMessage(player.getName() + " さんは " + event.getEntity().getKiller().getName()
 								+ " さんの攻撃により殉職なさいました。");
-						//運営のBAN防止の為Alertsに一時的に移植
-						//Main.ban.add(player.getUniqueId());
-						//player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
 					}
 				}
 			} else {
@@ -236,9 +267,6 @@ public class MainListener implements Listener {
 					Player player = (Player) event.getEntity();
 					if (!Main.admin.contains(player.getUniqueId())) {
 						Bukkit.broadcastMessage(player.getName() + " さんが殉職なさいました。");
-						//運営のBAN防止の為Alertsに一時的に移植
-						//Main.ban.add(player.getUniqueId());
-						//player.kickPlayer("お疲れ様でした。あなたの冒険はここまでです。");
 					}
 				}
 			}
@@ -249,18 +277,8 @@ public class MainListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		if (Main.isHard) {
 			Main.dcounter += 1;
-			ScoreBoard.setScoreHard();
 		}
 	}
-	//運営のBAN防止の為Alertsに一時的に移植
-	/*@EventHandler
-	public void banKick(PlayerLoginEvent event) {
-		if (Main.ban.contains(event.getPlayer().getUniqueId())) {
-			if (!event.getPlayer().isOp()) {// Op以外は鯖に入れない
-				event.disallow(Result.KICK_BANNED, "あなたの冒険はここまでです。");
-			}
-		}
-	}*/
 
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
@@ -270,6 +288,18 @@ public class MainListener implements Listener {
 				event.setDamage(0);
 			}
 		}
+	}
+	
+	//ログイン時、スコアボードをプレイヤーに付与
+	@EventHandler
+	public void onLogin(PlayerLoginEvent event) {
+		new BukkitRunnable() {
+            @Override
+            public void run() {
+            	//1秒後に実行しないとエラー: Cannot set Scoreboard yet
+            	ScoreBoard.setScoreboard(event.getPlayer());
+            }
+        }.runTaskLater(plugin, 20);
 	}
 
 	/*

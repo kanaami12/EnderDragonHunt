@@ -29,6 +29,9 @@ public class MainCommandExecutor implements CommandExecutor {
 					Main.isHard = false;
 					Bukkit.broadcastMessage(Main.prefix + "ハードコアモードは無効です。");
 				}
+				
+				//スコアボードをリロード
+				ScoreBoard.reloadScoreboard();
 				return true;
 			}
 			

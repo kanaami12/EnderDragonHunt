@@ -1,6 +1,8 @@
 
 package com.plugin.ftb.enderdragonhunt;
 
+import java.util.LinkedHashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Biome;
@@ -13,67 +15,16 @@ import org.bukkit.scoreboard.ScoreboardManager;
 public class ScoreBoard{
 
 	public static Main plugin = Main.plugin;
-
-	//スコアボード
-	public static ScoreboardManager manager = Bukkit.getScoreboardManager();
-	public static Scoreboard board = manager.getNewScoreboard();
 	
 	public static int higher;
 	public static int lower;
 	public static int ender;
 	public static int nether;
 	
-	public static void setScoreHard(){
-		Scoreboard teamBoard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
-		Objective o = board.getObjective("hardmode");
-		if ( o == null ) {
-			o = board.registerNewObjective("hardmode", "dummy");
-			// Objective の表示名を設定します。
-			o.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "≫ Ender Dragon Hunt ≪");
-			// Objectiveをどこに表示するかを設定します。
-			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-		}
-
-		//スコアボードの中身
-		String str = (Main.dcounter - 1) + "";
-		
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + str);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
-		
-		changeERs();
-		
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(4);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(3);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(2);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(1);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(0);
-		
-		
+	//全プレイヤーにスコアボードを付与
+	public static void setScoreboardToEveryone() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			player.setScoreboard(board);
-		}
-	}
-	
-	public static void deleteScore(){
-		Scoreboard teamBoard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
-		Objective o = board.getObjective("hardmode");
-		if ( o != null ) {
-			for(Player player : Bukkit.getOnlinePlayers()) {
-				player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-			}
-			return;
-		}
-		o = board.getObjective("normalmode");
-		if ( o != null ) {
-			for(Player player : Bukkit.getOnlinePlayers()) {
-				player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-			}
-			return;
+			setScoreboard(player);
 		}
 	}
 	
@@ -98,32 +49,86 @@ public class ScoreBoard{
 		}
 	}
 
-	public static void setScoreNormal() {
-		Scoreboard teamBoard = plugin.getServer().getScoreboardManager().getMainScoreboard();
+	//スコアボードをプレイヤーに対して登録する
+	public static void setScoreboard(Player player) {
+		Scoreboard board = plugin.getServer().getScoreboardManager().getNewScoreboard();
 
-		Objective o = board.getObjective("normalmode");
+		Objective o = board.getObjective("object");
 		if ( o == null ) {
-			o = board.registerNewObjective("normalmode", "dummy");
+			o = board.registerNewObjective("object", "dummy");
 			// Objective の表示名を設定します。
 			o.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "≫ Ender Dragon Hunt ≪");
 			// Objectiveをどこに表示するかを設定します。
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 		
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
+		if(Main.isHard) o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(-1);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(-2);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(-3);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(-4);
+		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(-5);
 		
-		changeERs();
+		board.resetScores("" + ChatColor.WHITE + ChatColor.BOLD + player.getName() + ":");
+		player.setScoreboard(board);
+	}
+	
+	//スコアをアップデート
+	public static void updateScores() {
 		
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(3);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(2);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(1);
-		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(0);
+		//過去のスコアを記録
+		LinkedHashMap<String, Integer> pastTopList = MainUtils.topList;
+		//最新の情報に更新
+		MainUtils.updateTopList();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			player.setScoreboard(board);
+			
+			Scoreboard personalBoard = player.getScoreboard();
+	
+			Objective o = personalBoard.getObjective("object");
+			if ( o == null ) {
+				o = personalBoard.registerNewObjective("object", "dummy");
+				// Objective の表示名を設定します。
+				o.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "≫ Ender Dragon Hunt ≪");
+				// Objectiveをどこに表示するかを設定します。
+				o.setDisplaySlot(DisplaySlot.SIDEBAR);
+			}
+			
+			if(Main.isHard) o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + (Main.dcounter-1));
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
+			
+			changeERs();
+			
+			if(Main.isHard) o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(-1);
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(-2);
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower).setScore(-3);
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether).setScore(-4);
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender).setScore(-5);
+			
+			//過去のスコアを削除
+			for(String name : pastTopList.keySet()) {
+				personalBoard.resetScores("" + ChatColor.GREEN + ChatColor.BOLD + name + ":");
+			}
+			
+			//新しいスコアを登録
+			for(String name : MainUtils.topList.keySet()) {
+				o.getScore("" + ChatColor.GREEN + ChatColor.BOLD + name + ":").setScore(MainUtils.topList.get(name));
+			}
+			
+			//トップ10に含まれていない場合、自分のスコアを表示
+			if(!MainUtils.topList.containsKey(player.getName())) {
+				if(!MainUtils.pointList.containsKey(player.getName())) {
+					//値がない場合追加
+					MainUtils.pointList.put(player.getName(), 0);
+				}
+				o.getScore("" + ChatColor.WHITE + ChatColor.BOLD + player.getName() + ":").setScore(MainUtils.pointList.get(player.getName()));
+			}else {
+				//含まれている場合、個人のスコアを非表示
+				personalBoard.resetScores("" + ChatColor.WHITE + ChatColor.BOLD + player.getName() + ":");
+			}
+			player.setScoreboard(personalBoard);
 		}
 	}
 	
@@ -131,12 +136,8 @@ public class ScoreBoard{
 	 * スコアボードをリロードする
 	 */
 	public static void reloadScoreboard() {
-		if(Main.isHard) {
-			Objective o = board.getObjective("hardmode");
-			if(o != null) o.unregister();
-		}else {
-			Objective o = board.getObjective("normalmode");
-			if(o != null) o.unregister();
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			player.getScoreboard().getObjective("object").unregister();
 		}
 	}
 }

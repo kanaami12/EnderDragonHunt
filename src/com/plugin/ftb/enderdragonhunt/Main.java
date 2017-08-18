@@ -60,6 +60,7 @@ public class Main extends JavaPlugin{
 		
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		Scoreboard board = manager.getMainScoreboard();
+		ScoreBoard.setScoreboardToEveryone();
 		
 		//クラス作成がめんどくさかったので直接入れちゃいました
 		//もしクラス分けするときは消してください！by える
@@ -67,12 +68,8 @@ public class Main extends JavaPlugin{
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
 			@Override
 			public void run() {
-				if(Main.isHard) {
-					ScoreBoard.setScoreHard();
-				}
-				else {
-					ScoreBoard.setScoreNormal();
-				}
+				ScoreBoard.updateScores();
+				
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					Biome biome = p.getWorld().getBiome(p.getLocation().getBlockX(), p.getLocation().getBlockZ());
 					if(biome == Biome.DESERT) {
@@ -113,6 +110,13 @@ public class Main extends JavaPlugin{
 													+ ChatColor.DARK_RED + "ネザー要塞" + ChatColor.RESET + "を見つけた(座標: " + x1
 													+ ", " + y1 + ", " + z1 + ")");
 											Main.netheryousai.put(p, new Location(p.getWorld(), x1, y1, z1));
+											
+											if(!MainListener.netherFound) {
+												//初めて発見されたあればポイント追加
+												MainUtils.addPoint(p, 30);
+												//発見されたことを記録
+												MainListener.netherFound = true;
+											}
 										}
 
 									}
@@ -145,6 +149,13 @@ public class Main extends JavaPlugin{
 															+ ChatColor.DARK_GREEN + "エンドポータル" + ChatColor.RESET
 															+ "を見つけた(座標: " + x1 + ", " + y1 + ", " + z1 + ")");
 											Main.endpotal.put(p, new Location(p.getWorld(), x1, y1, z1));
+											
+											if(!MainListener.endFound) {
+												//初めて発見されたあればポイント追加
+												MainUtils.addPoint(p, 30);
+												//発見されたことを記録
+												MainListener.endFound = true;
+											}
 										}
 									}
 								}
