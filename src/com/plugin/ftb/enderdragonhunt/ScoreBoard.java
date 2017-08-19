@@ -16,6 +16,7 @@ public class ScoreBoard{
 
 	public static Main plugin = Main.plugin;
 	
+	public static int pastDcounter = 0;
 	public static int higher;
 	public static int lower;
 	public static int ender;
@@ -77,8 +78,14 @@ public class ScoreBoard{
 		
 		//過去のスコアを記録
 		LinkedHashMap<String, Integer> pastTopList = MainUtils.topList;
+		int pastHigher = higher;
+		int pastLower = lower;
+		int pastNether = nether;
+		int pastEnder = ender;
+		
 		//最新の情報に更新
 		MainUtils.updateTopList();
+		changeERs();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			
@@ -93,13 +100,11 @@ public class ScoreBoard{
 				o.setDisplaySlot(DisplaySlot.SIDEBAR);
 			}
 			
-			if(Main.isHard) o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + (Main.dcounter-1));
-			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher);
-			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + lower);
-			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + nether);
-			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + ender);
-			
-			changeERs();
+			if(Main.isHard) o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + pastDcounter);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + pastHigher);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "地下の人  " + ChatColor.RESET + ":      " + pastLower);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "ネザーの人" + ChatColor.RESET + ":      " + pastNether);
+			o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "エンドの人" + ChatColor.RESET + ":      " + pastEnder);
 			
 			if(Main.isHard) o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(-1);
 			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(-2);
@@ -130,6 +135,9 @@ public class ScoreBoard{
 			}
 			player.setScoreboard(personalBoard);
 		}
+		
+		//過去のスコアを記録
+		pastDcounter = Main.dcounter;
 	}
 	
 	/*
