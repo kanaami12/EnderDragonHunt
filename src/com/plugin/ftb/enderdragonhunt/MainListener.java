@@ -293,13 +293,14 @@ public class MainListener implements Listener {
 	//ログイン時、スコアボードをプレイヤーに付与
 	@EventHandler
 	public void onLogin(PlayerLoginEvent event) {
+		final Player player = event.getPlayer();
 		new BukkitRunnable() {
             @Override
             public void run() {
             	//1秒後に実行しないとエラー: Cannot set Scoreboard yet
-            	ScoreBoard.setScoreboard(event.getPlayer());
+            	ScoreBoard.setScoreboard(player);
             }
-        }.runTaskLater(plugin, 20);
+        }.runTaskLater(plugin, 60);
 	}
 
 	/*

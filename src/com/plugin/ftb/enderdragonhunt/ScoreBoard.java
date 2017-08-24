@@ -55,13 +55,15 @@ public class ScoreBoard{
 		Scoreboard board = plugin.getServer().getScoreboardManager().getNewScoreboard();
 
 		Objective o = board.getObjective("object");
-		if ( o == null ) {
-			o = board.registerNewObjective("object", "dummy");
-			// Objective の表示名を設定します。
-			o.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "≫ Ender Dragon Hunt ≪");
-			// Objectiveをどこに表示するかを設定します。
-			o.setDisplaySlot(DisplaySlot.SIDEBAR);
+		if ( o != null ) {
+			o.unregister();
 		}
+		
+		o = board.registerNewObjective("object", "dummy");
+		// Objective の表示名を設定します。
+		o.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "≫ Ender Dragon Hunt ≪");
+		// Objectiveをどこに表示するかを設定します。
+		o.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		if(Main.isHard) o.getScore("" + ChatColor.RED + ChatColor.BOLD + "殉職者数  " + ChatColor.RESET + ":      " + Main.dcounter).setScore(-1);
 		o.getScore("" + ChatColor.RED + ChatColor.BOLD + "地上の人  " + ChatColor.RESET + ":      " + higher).setScore(-2);
@@ -88,9 +90,7 @@ public class ScoreBoard{
 		changeERs();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			
 			Scoreboard personalBoard = player.getScoreboard();
-	
 			Objective o = personalBoard.getObjective("object");
 			if ( o == null ) {
 				o = personalBoard.registerNewObjective("object", "dummy");
@@ -145,7 +145,10 @@ public class ScoreBoard{
 	 */
 	public static void reloadScoreboard() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			player.getScoreboard().getObjective("object").unregister();
+			if(player.getScoreboard().getObjective("object") != null) {
+				player.getScoreboard().getObjective("object").unregister();
+			}
+			setScoreboard(player);
 		}
 	}
 }
